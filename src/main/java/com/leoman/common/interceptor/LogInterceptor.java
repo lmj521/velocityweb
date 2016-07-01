@@ -7,7 +7,11 @@ import com.leoman.common.log.entity.LogEntity;
 import com.leoman.common.log.service.LogService;
 import com.leoman.common.log.service.impl.LogServiceImpl;
 import com.leoman.common.logger.Logger;
+import com.leoman.utils.AesUtils;
 import com.leoman.utils.BeanUtil;
+import com.leoman.utils.JsonUtil;
+import com.leoman.utils.encryption.BackAES;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -16,11 +20,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/5/22.
  */
 public class LogInterceptor extends HandlerInterceptorAdapter{
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        String params = request.getParameter("params");
+        if(StringUtils.isNotBlank(params)) {
+            try {
+                String encode = BackAES.decrypt(params.replaceAll(" ","+"),BackAES.TYPE_ECB);
+                System.out.println("解密之后:" + encode);
+                if(StringUtils.isNotBlank(encode)) {
+                    Map<String,Object> map = JsonUtil.jsontoMap(encode);
+                    for (Map.Entry<String,Object> obj : map.entrySet()) {
+                        request.setAttribute(obj.getKey(),obj.getValue());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return super.preHandle(request, response, handler);
+    }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -45,6 +71,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
                     logService.save(logEntity);
                 }
             }
+
             super.postHandle(request, response, handler, modelAndView);
         } catch (Exception e) {
             e.printStackTrace();
