@@ -126,7 +126,9 @@
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
-	
+
+	<aop:aspectj-autoproxy/>
+	<import resource="redis-context.xml" />
 	<bean id="beanUtil" class="com.leoman.utils.BeanUtil"></bean>
 	<!--<bean id="cacheTempCodeServiceImpl" class="com.leoman.cache.CacheTempCodeServiceImpl" />-->
 	<bean id="logService" class="com.leoman.common.log.service.impl.LogServiceImpl" />
