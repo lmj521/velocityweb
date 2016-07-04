@@ -3,6 +3,7 @@ package com.leoman.common.filter;
 import com.leoman.admin.entity.Admin;
 import com.leoman.common.logger.Logger;
 import com.leoman.common.core.Constant;
+import com.leoman.index.servlet.ParameterRequestWrapper;
 import com.leoman.utils.WebUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,6 +52,9 @@ public class AdminFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        Map<String,String[]> m = new HashMap<String,String[]>(request.getParameterMap());
+        request = new ParameterRequestWrapper((HttpServletRequest)request, m);
 
         String url = httpRequest.getRequestURI().toString();
         String contextPath = httpRequest.getContextPath();

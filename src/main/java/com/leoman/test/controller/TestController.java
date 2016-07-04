@@ -1,5 +1,6 @@
 package com.leoman.test.controller;
 
+import com.leoman.test.entity.TestEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,9 +15,7 @@ import java.util.Map;
 public class TestController {
 
     @RequestMapping(value = "/aes")
-    public void aes(@RequestParam Map<String,Object> map) {
-        for (Map.Entry<String,Object> params : map.entrySet()) {
-            System.out.println("key:" + params.getKey() + "==value" + params.getValue());
-        }
+    public void aes(TestEntity testEntity) {
+        System.out.println(testEntity.toString());
     }
 }
