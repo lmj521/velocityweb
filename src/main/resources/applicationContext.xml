@@ -18,6 +18,7 @@
 			<list>
 				<value>classpath:conf/system.properties</value>
 				<value>classpath:conf/jdbc.properties</value>
+				<value>classpath:conf/redis.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -100,8 +101,7 @@
 	<!-- 配置Spring Data JPA扫描目录 -->
 	<jpa:repositories base-package="com.leoman" />
 
-	<!-- AOP -->
-	<aop:aspectj-autoproxy />
+
 	<!--<bean name="wxMpConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">-->
 		<!--<property name="appId" value="${weixin.appId}" />-->
 		<!--<property name="secret" value="${weixin.secret}" />-->
@@ -126,9 +126,9 @@
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
-
-	<aop:aspectj-autoproxy/>
-	<import resource="redis-context.xml" />
+    <!-- AOP -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+	<import resource="classpath:redis-context.xml" />
 	<bean id="beanUtil" class="com.leoman.utils.BeanUtil"></bean>
 	<!--<bean id="cacheTempCodeServiceImpl" class="com.leoman.cache.CacheTempCodeServiceImpl" />-->
 	<bean id="logService" class="com.leoman.common.log.service.impl.LogServiceImpl" />

@@ -1,5 +1,6 @@
 package com.leoman.index.controller;
 
+import com.leoman.common.annotion.RequestLimit;
 import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.core.Constant;
 import com.leoman.common.log.entity.Log;

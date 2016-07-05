@@ -28,27 +28,6 @@ import java.util.Map;
 public class LogInterceptor extends HandlerInterceptorAdapter{
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        String params = request.getParameter("params");
-        if(StringUtils.isNotBlank(params)) {
-            try {
-                String encode = BackAES.decrypt(params.replaceAll(" ","+"),BackAES.TYPE_ECB);
-                System.out.println("解密之后:" + encode);
-                if(StringUtils.isNotBlank(encode)) {
-                    Map<String,Object> map = JsonUtil.jsontoMap(encode);
-                    for (Map.Entry<String,Object> obj : map.entrySet()) {
-                        request.setAttribute(obj.getKey(),obj.getValue());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return super.preHandle(request, response, handler);
-    }
-
-    @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         try {
             if(! (handler instanceof HandlerMethod)) {

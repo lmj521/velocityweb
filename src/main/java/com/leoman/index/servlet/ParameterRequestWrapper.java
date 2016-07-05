@@ -80,7 +80,7 @@ public class ParameterRequestWrapper extends HttpServletRequestWrapper {
     }
 
     private void renewParameterMap(HttpServletRequest req) {
-        String params = req.getParameter("params");
+        String params = req.getQueryString();
         if (StringUtils.isNotBlank(params)) {
             try {
                 String encode = BackAES.decrypt(params.replaceAll(" ", "+"), BackAES.TYPE_ECB);
