@@ -12,6 +12,10 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class AspectTest {
 
+    public AspectTest() {
+        System.out.println("===========初始化AspectTest============");
+    }
+
     @Before(value="execution(* com.leoman.index.service.impl.LoginServiceImpl.login(..))")
     public void doBefore(JoinPoint joinPoint) {
         System.out.println("=============doBefore()==============");
