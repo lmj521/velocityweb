@@ -127,7 +127,12 @@
 			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
 	</context:component-scan>
     <!-- AOP -->
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+	<bean id="aspectjBean" class="com.leoman.test.controller.RequestLimtContract" />
+
+    <aop:aspectj-autoproxy proxy-target-class="true">
+		<aop:include name = "aspectjBean" />
+	</aop:aspectj-autoproxy>
+
 	<import resource="classpath:redis-context.xml" />
 	<bean id="beanUtil" class="com.leoman.utils.BeanUtil"></bean>
 	<!--<bean id="cacheTempCodeServiceImpl" class="com.leoman.cache.CacheTempCodeServiceImpl" />-->

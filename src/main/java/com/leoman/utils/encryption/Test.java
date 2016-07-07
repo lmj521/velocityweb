@@ -23,7 +23,9 @@ public class Test {
 			System.out.println("解密耗时：" + lUseTime + "毫秒");
 
 			String url = "http://localhost:8088/velocity/admin/test/aes?" + encrypt;
+//			String url = "http://localhost:8088/velocity/admin/test/user?uname=admin";
 			System.out.println("请求路径:" + url);
+
 			WebserviceUtil.post(url);
 		}
 

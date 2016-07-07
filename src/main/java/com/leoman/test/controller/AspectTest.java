@@ -1,23 +1,31 @@
-package com.leoman.test.controller;
-
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.stereotype.Component;
-
-/**
- * Created by Administrator on 2016/7/5.
- */
-@Component
-@Aspect
-public class AspectTest {
-
-    public AspectTest() {
-        System.out.println("===========初始化AspectTest============");
-    }
-
-    @Before(value="execution(* com.leoman.index.service.impl.LoginServiceImpl.login(..))")
-    public void doBefore(JoinPoint joinPoint) {
-        System.out.println("=============doBefore()==============");
-    }
-}
+//package com.leoman.test.controller;
+//import org.aspectj.lang.JoinPoint;
+//import org.aspectj.lang.ProceedingJoinPoint;
+//import org.aspectj.lang.annotation.After;
+//import org.aspectj.lang.annotation.AfterReturning;
+//import org.aspectj.lang.annotation.AfterThrowing;
+//import org.aspectj.lang.annotation.Around;
+//import org.aspectj.lang.annotation.Aspect;
+//import org.aspectj.lang.annotation.Before;
+//import org.springframework.aop.ThrowsAdvice;
+//import org.springframework.stereotype.Component;
+//
+//@Component
+//@Aspect
+//public class AspectTest{
+//
+//	public AspectTest(){
+//		System.out.println("��ʼ������...");
+//	}
+//
+//	//ǰ��֪ͨ
+//	@Before(value="execution(* com.leoman.test.controller.UserController.user*(..))")
+//	public void doBefore(JoinPoint jp){
+//		//JoinPointȡֵʾ��
+//		Object[] obj = jp.getArgs();
+//		for(int i=0;i<obj.length;i++){
+//			System.out.println("����"+i+":"+obj[i]);
+//		}
+//		System.out.println("ִ����ǰ��֪ͨ");
+//	}
+//}
