@@ -2,7 +2,7 @@ package com.leoman.velocity.model;
 
 public enum ValidateRule {
     Email("邮箱","email"),
-    Mobile("手机号码","phone"),
+    Mobile("手机号码","mobile"),
     Date("日期","date");
 
     private final String ruleName;

@@ -7,6 +7,9 @@ import com.leoman.velocity.model.QueryModel;
 
 public class EntityViewUI {
 
+	public static final String TYPE_ADD = "add";
+	public static final String TYPE_LIST = "list";
+
 	private EntityModel entityModel;
 	private ListModel listModel;
 	private QueryModel queryModel;

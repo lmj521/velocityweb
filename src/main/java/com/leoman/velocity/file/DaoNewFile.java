@@ -12,7 +12,7 @@ public class DaoNewFile extends NewFile {
 
 	private EntityModel entityModel;
 
-	private static final String TEMPLATE_PATH = "daoTemplate.vm";
+	private static final String TEMPLATE_PATH = "template/daoTemplate.vm";
 
 	public DaoNewFile(String name, String projectPath, String packageName, EntityModel entityModel) {
 		super(name, projectPath, packageName);

@@ -10,7 +10,7 @@ import java.text.MessageFormat;
 
 public class ServiceNewFile extends NewFile {
 
-	private static final String TEMPLATE_PATH = "serviceTemplate.vm";
+	private static final String TEMPLATE_PATH = "template/serviceTemplate.vm";
 
 	private EntityModel entityModel;
 

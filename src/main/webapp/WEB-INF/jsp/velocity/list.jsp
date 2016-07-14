@@ -43,12 +43,14 @@
                         <input type="hidden" id="srcJava" name="srcJava" value = "${srcJava}" />
                     </div>
                 </div>
+
             </div>
         </form>
-
         <hr class="whiter m-t-20"/>
+
         <!-- Tab -->
         <div class="block-area" id="tabs">
+            <%--<textarea class="form-control auto-size m-b-10" placeholder="This is a default Textarea..." disabled>${log11.message}</textarea>--%>
             <div class="tab-container tile">
                 <ul class="nav tab nav-tabs">
                     <li class="active"><a href="#home1">列表</a></li>
@@ -76,21 +78,20 @@
                                         <td><input type="text" class="form-control input-sm validate[required]" id="listname${field.name}" placeholder="..."></td>
                                         <td>
                                             <select class="select superselect" id="listselect${field.name}" onchange="_userInfo.fn.select(this)">
-                                                <option>Default Text</option>
-                                                <option>Image</option>
-                                                <option>Rich Text</option>
-                                                <option>Select</option>
-                                                <option>Radio</option>
-                                                <option>CheckBox</option>
-                                                <option>Date</option>
+                                                <option value="defaultText">Default Text</option>
+                                                <option value="image">Image</option>
+                                                <option value="richText">Rich Text</option>
+                                                <option value="select">Select</option>
+                                                <option value="radio">Radio</option>
+                                                <option value="checkBox">CheckBox</option>
+                                                <option value="date">Date</option>
                                             </select>
                                         </td>
                                         <td>
                                             <select class="select subselect" id="listsubselect${field.name}">
-                                                <option>手机</option>
-                                                <option>邮箱</option>
-                                                <option>数字</option>
-                                                <option>URL</option>
+                                               <c:forEach items="${list}" var="rule">
+                                                   <option value="${rule.regex}">${rule.ruleName}</option>
+                                               </c:forEach>
                                             </select>
                                         </td>
                                         <td>
@@ -126,21 +127,20 @@
                                     <td><input type="text" class="form-control input-sm validate[required]" id="listname${field.name}" placeholder="..."></td>
                                     <td>
                                         <select class="select superselect" id="addselect${field.name}" onchange="_userInfo.fn.select(this)">
-                                            <option>Default Text</option>
-                                            <option>Image</option>
-                                            <option>Rich Text</option>
-                                            <option>Select</option>
-                                            <option>Radio</option>
-                                            <option>CheckBox</option>
-                                            <option>Date</option>
+                                            <option value="defaultText">Default Text</option>
+                                            <option value="image">Image</option>
+                                            <option value="richText">Rich Text</option>
+                                            <option value="select">Select</option>
+                                            <option value="radio">Radio</option>
+                                            <option value="checkBox">CheckBox</option>
+                                            <option value="date">Date</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select class="select subselect" id="addsubselect${field.name}">
-                                            <option>手机</option>
-                                            <option>邮箱</option>
-                                            <option>数字</option>
-                                            <option>URL</option>
+                                            <c:forEach items="${list}" var="rule">
+                                                <option value="${rule.regex}">${rule.ruleName}</option>
+                                            </c:forEach>
                                         </select>
                                     </td>
                                     <td>
@@ -176,21 +176,20 @@
                                     <td><input type="text" class="form-control input-sm validate[required]" id="listname${field.name}" placeholder="..."></td>
                                     <td>
                                         <select class="select superselect" id="detailselect${field.name}" onchange="_userInfo.fn.select(this)">
-                                            <option>Default Text</option>
-                                            <option>Image</option>
-                                            <option>Rich Text</option>
-                                            <option>Select</option>
-                                            <option>Radio</option>
-                                            <option>CheckBox</option>
-                                            <option>Date</option>
+                                            <option value="defaultText">Default Text</option>
+                                            <option value="image">Image</option>
+                                            <option value="richText">Rich Text</option>
+                                            <option value="select">Select</option>
+                                            <option value="radio">Radio</option>
+                                            <option value="checkBox">CheckBox</option>
+                                            <option value="date">Date</option>
                                         </select>
                                     </td>
                                     <td>
                                         <select class="select subselect" id="detailsubselect${field.name}">
-                                            <option>手机</option>
-                                            <option>邮箱</option>
-                                            <option>数字</option>
-                                            <option>URL</option>
+                                            <c:forEach items="${list}" var="rule">
+                                                <option value="${rule.regex}">${rule.ruleName}</option>
+                                            </c:forEach>
                                         </select>
                                     </td>
                                     <td>
@@ -237,32 +236,29 @@
                 subselect.empty();
 
                 var options = new Array();
-                if (selectval == 'Default Text') {
-                    options.push("<option>默认</option>");
-                    options.push("<option>手机</option>");
-                    options.push("<option>邮箱</option>");
-                    options.push("<option>数字</option>");
-                    options.push("<option>其他正则表达式</option>")
+                if (selectval == 'defaultText') {
+                     _userInfo.fn.findDefaultText(item);
+                    return;
                 }
-                else if (selectval == 'Image') {
-                    options.push("<option>单图</option>");
-                    options.push("<option>多图</option>");
+                else if (selectval == 'image') {
+                    options.push("<option value='singular'>单图</option>");
+                    options.push("<option value='plural'>多图</option>");
                 }
-                else if (selectval == 'Rich Text') {
+                else if (selectval == 'richText') {
                 }
-                else if (selectval == 'Select') {
+                else if (selectval == 'select') {
                     _userInfo.fn.findDD(item);
                     return;
                 }
-                else if (selectval == 'Radio') {
+                else if (selectval == 'radio') {
                     options = _userInfo.fn.findDD(item);
                     return;
                 }
-                else if (selectval == 'CheckBox') {
+                else if (selectval == 'checkBox') {
                     options = _userInfo.fn.findDD(item);
                     return;
                 }
-                else if (selectval == 'Date') {
+                else if (selectval == 'date') {
 
                 }
                 subselect.append(options);
@@ -281,6 +277,27 @@
                             var option = "<option value = " + data[i].id + "> " + data[i].name + " </option>";
                             options.push(option);
                         }
+                        var subselect = $(item).parent().next().find("select");
+                        subselect.empty();
+
+                        subselect.append(options);
+                        subselect.selectpicker('refresh');
+                    }
+                });
+            },
+            findDefaultText : function(item) {
+                $.ajax({
+                    url: "${contextPath}/admin/velocity/defaultText",
+                    type: "POST",
+                    success: function (result) {
+                        var options = new Array();
+                        console.log(result);
+                        var data = eval(result.data);
+                        for (var i = 0; i < data.length; i++) {
+                            var option = "<option value = " + data[i].regex + "> " + data[i].ruleName + " </option>";
+                            options.push(option);
+                        }
+
                         var subselect = $(item).parent().next().find("select");
                         subselect.empty();
 

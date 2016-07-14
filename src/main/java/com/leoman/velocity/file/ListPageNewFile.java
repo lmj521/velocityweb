@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 
 public class ListPageNewFile extends NewFile {
 
-	private static final String TEMPLATE_PATH = "list.jsp.vm";
+	private static final String TEMPLATE_PATH = "template/list.jsp.vm";
 
 	private QueryModel queryModel;
 	private ListModel listModel;

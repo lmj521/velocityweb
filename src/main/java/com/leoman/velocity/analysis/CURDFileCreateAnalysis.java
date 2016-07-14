@@ -23,16 +23,15 @@ public class CURDFileCreateAnalysis {
 		// ==========================================================================
 		createListPage(projectPath, entityUI, entityUI.getEntityModel(), newFiles);
 		createAddPage(projectPath, entityUI, entityUI.getEntityModel(), newFiles);
-		createDetailPage(projectPath, entityUI, entityUI.getEntityModel(), newFiles);
-		
+//		createDetailPage(projectPath, entityUI, entityUI.getEntityModel(), newFiles);
 		return newFiles;
 	}
 	
-	private static void createDetailPage(String projectPath, EntityViewUI entityUI, EntityModel entityModel,
-			List<NewFile> newFiles) {
-		DetailPageNewFile detailNewFile = new DetailPageNewFile("detail",projectPath, entityModel.getPackpageName(),entityUI);
-		newFiles.add(detailNewFile);
-	}
+//	private static void createDetailPage(String projectPath, EntityViewUI entityUI, EntityModel entityModel,
+//			List<NewFile> newFiles) {
+//		DetailPageNewFile detailNewFile = new DetailPageNewFile("detail",projectPath, entityModel.getPackpageName(),entityUI);
+//		newFiles.add(detailNewFile);
+//	}
 
 	private static void createAddPage(String projectPath, EntityViewUI entityUI, EntityModel entityModel,
 			List<NewFile> newFiles) {

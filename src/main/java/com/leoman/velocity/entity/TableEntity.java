@@ -1,5 +1,7 @@
 package com.leoman.velocity.entity;
 
+import java.util.List;
+
 /**
  *
  * Created by yesong on 2016/6/30.
@@ -10,7 +12,17 @@ public class TableEntity {
     private String c2;
     private String c3;
     private String c4;
-    private String c5;
+    private Boolean c5;
+
+    private List<DDSub> list;
+
+    public List<DDSub> getList() {
+        return list;
+    }
+
+    public void setList(List<DDSub> list) {
+        this.list = list;
+    }
 
     public String getC1() {
         return c1;
@@ -44,11 +56,11 @@ public class TableEntity {
         this.c4 = c4;
     }
 
-    public String getC5() {
+    public Boolean getC5() {
         return c5;
     }
 
-    public void setC5(String c5) {
+    public void setC5(Boolean c5) {
         this.c5 = c5;
     }
 

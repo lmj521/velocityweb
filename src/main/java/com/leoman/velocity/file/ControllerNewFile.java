@@ -11,7 +11,7 @@ import java.text.MessageFormat;
 
 public class ControllerNewFile extends NewFile {
 
-	private static final String TEMPLATE_PATH = "controllerTemplate.vm";
+	private static final String TEMPLATE_PATH = "template/controllerTemplate.vm";
 
 	private EntityModel entityModel;
 

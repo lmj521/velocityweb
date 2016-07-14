@@ -11,7 +11,7 @@ import java.text.MessageFormat;
 
 public class AddPageNewFile extends NewFile {
 
-	private static final String TEMPLATE_PATH = "add.jsp.vm";
+	private static final String TEMPLATE_PATH = "template/add.jsp.vm";
 
 	private AddModel addModel;
 

@@ -42,11 +42,14 @@ public class LogInterceptor extends HandlerInterceptorAdapter{
                     String message = log.message();
                     MessageFormat mf = new MessageFormat(message);
                     String result = mf.format(new Object[]{admin.getUsername()});
-                    Logger.info("result:" + result);
                     LogServiceImpl logService = (LogServiceImpl) BeanUtil.getBean("logService");
                     LogEntity logEntity = new LogEntity();
                     logEntity.setMessage(result);
                     logEntity.setUserId(admin.getId());
+                    logEntity.setLogType(LogEntity.LOG_TYPE_INFO);
+                    logEntity.setUrl("");
+                    logEntity.setParams("");
+                    logEntity.setUserType(LogEntity.USER_TYPE_ADMIN);
                     logService.save(logEntity);
                 }
             }

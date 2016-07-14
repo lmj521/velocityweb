@@ -1,18 +1,26 @@
 package com.leoman.velocity.controller;
 
+import com.leoman.common.log.entity.LogEntity;
+import com.leoman.common.log.service.LogService;
+import com.leoman.common.log.service.impl.LogServiceImpl;
 import com.leoman.image.entity.FileBo;
+import com.leoman.utils.BeanUtil;
 import com.leoman.utils.FileUtil;
 import com.leoman.utils.JsonUtil;
 import com.leoman.utils.Result;
 import com.leoman.velocity.analysis.CURDCoreAnalysis;
+import com.leoman.velocity.analysis.CURDFileCreateAnalysis;
+import com.leoman.velocity.core.CodeGenerator;
 import com.leoman.velocity.entity.DD;
 import com.leoman.velocity.entity.DDSub;
 import com.leoman.velocity.entity.TableEntity;
-import com.leoman.velocity.model.EntityModel;
-import com.leoman.velocity.model.ui.UIWidget;
+import com.leoman.velocity.file.NewFile;
+import com.leoman.velocity.model.*;
+import com.leoman.velocity.model.ui.*;
 import com.leoman.velocity.service.DDService;
 import com.leoman.velocity.service.DDSubService;
 import com.qiniu.util.Json;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -29,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +56,12 @@ public class VelocityController {
     private DDSubService ddSubService;
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public String index() {
+    public String index(Model model) {
+
+//        LogServiceImpl logService = (LogServiceImpl) BeanUtil.getBean("logService");
+//        LogEntity logEntity = logService.queryByPK(4L);
+        model.addAttribute("list",ddService.findAllValidateRule());
+//        model.addAttribute("log11",logEntity);
         return "velocity/list";
     }
 
@@ -83,6 +97,26 @@ public class VelocityController {
     public Result ddList() {
         List<DD> list = ddService.queryAll();
         return Result.success(list);
+    }
+
+    /**
+     * 获取数据字典名字列表
+     *
+     * @return
+     */
+    @RequestMapping(value = "/defaultText", method = RequestMethod.POST)
+    @ResponseBody
+    public Result defaultText() {
+        List<ValidateRule> list =  ddService.findAllValidateRule();
+        List<Map<String,String>> mapList = new ArrayList<Map<String,String>>();
+
+        for(ValidateRule validateRule : list) {
+            Map<String,String> map = new HashMap<String,String>();
+            map.put("ruleName",validateRule.getRuleName());
+            map.put("regex",validateRule.getRegex());
+            mapList.add(map);
+        }
+        return Result.success(mapList);
     }
 
     /**
@@ -146,7 +180,7 @@ public class VelocityController {
 
 
     @RequestMapping(value = "/analysis", method = RequestMethod.POST)
-    public String analysis(@RequestParam(value = "file", required = true) MultipartFile file, Model _model) {
+    public String analysis(@RequestParam(value = "file", required = true) MultipartFile file, Model _model,HttpServletRequest request) {
 
         try {
             FileBo fileBo = FileUtil.save(file, file.getOriginalFilename());
@@ -162,6 +196,9 @@ public class VelocityController {
             EntityModel model = analysis.analysis(srcJava);
             _model.addAttribute("fields", model.getFields());
             _model.addAttribute("srcJava",srcJava);
+            _model.addAttribute("list",ddService.findAllValidateRule());
+
+            request.getSession().setAttribute("absPath",absPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -176,7 +213,7 @@ public class VelocityController {
      */
     @RequestMapping(value = "/generate", method = RequestMethod.POST)
     @ResponseBody
-    public Result generate(String tabString,String srcJava) {
+    public Result generate(String tabString,String srcJava,HttpServletRequest request) {
 
         List<String> list = JsonUtil.json2Obj(tabString, List.class);
         // list : [{"c1":"id","c2":"","c3":"Default Text","c4":"手机","c5":false},{"c1":"name","c2":"","c3":"Default Text","c4":"手机","c5":false},{"c1":"desc","c2":"","c3":"Default Text","c4":"手机","c5":false}]
@@ -184,23 +221,80 @@ public class VelocityController {
         List<TableEntity> listList = JsonUtil.json2List(list.get(0),TableEntity[].class);
         List<TableEntity> addList  = JsonUtil.json2List(list.get(1),TableEntity[].class);
         EntityModel entityModel =  CURDCoreAnalysis.getInstance().analysis(srcJava);
+
+        EntityViewUI ui = new EntityViewUI();
+        ui.setEntityModel(entityModel);
+        analysisTableEntity(ui,listList,EntityViewUI.TYPE_LIST);
+        analysisTableEntity(ui,addList,EntityViewUI.TYPE_ADD);
+
+        String filePath = (String) request.getSession().getAttribute("absPath");
+        String projectPath = filePath.substring(0, filePath.indexOf("/src/main/java/"));
+        List<NewFile> createFiles = CURDFileCreateAnalysis.getCreateFileList(projectPath, ui);
+        try {
+            CodeGenerator.generateCode(createFiles, entityModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return Result.success();
     }
 
-    /**
-     * tableentity to uiwidget
-     * @param tableEntities
-     */
-    public void generateUtils(List<TableEntity> tableEntities) {
-        List<UIWidget> list = new ArrayList<UIWidget>();
-        for (TableEntity tableEntity : tableEntities) {
 
+    public void analysisTableEntity(EntityViewUI ui,List<TableEntity> tableEntities,String type) {
+
+        List<UIWidget> uiWidgets = new ArrayList<UIWidget>();
+        for (TableEntity tableEntity : tableEntities) {
+            UIWidget uiWidget = tableEntity2UIWidget(tableEntity);
+            uiWidgets.add(uiWidget);
+        }
+
+        if(type.equals(EntityViewUI.TYPE_ADD)) {
+            AddModel model = new AddModel(uiWidgets);
+            ui.setAddModel(model);
+        }
+        else if(type.equals(EntityViewUI.TYPE_LIST)) {
+            ListModel model = new ListModel(uiWidgets);
+            ui.setListModel(model);
         }
     }
 
-    public UIWidget tableEntity2UIWidget(TableEntity tableEntity) {
+    /**
+     * tableEntity转UIWidget
+     * @param tableEntitie
+     * @return
+     */
+    public UIWidget tableEntity2UIWidget(TableEntity tableEntitie) {
 
-        return null;
+        String colunmTypeStr = tableEntitie.getC3();
+        String ddId = tableEntitie.getC4();
+        UIWidget uiWidget = null;
+        switch (colunmTypeStr) {
+            case "defaultText" :
+                uiWidget = TextUIWidget.createTextUIWidget(tableEntitie);
+                break;
+            case "image" :
+                uiWidget = ImageUIWidget.createImageUIWidget(tableEntitie);
+                break;
+            case "richText" :
+                uiWidget = RichUIWidget.createImageUIWidget(tableEntitie);
+                break;
+            case "select" :
+                List<DDSub> selectList = ddSubService.queryByProperty("ddId", ddId);
+                tableEntitie.setList(selectList);
+                uiWidget = SelectUIWidget.createSelectUIWidget(tableEntitie);
+                break;
+            case "radio" :
+                List<DDSub> radioList = ddSubService.queryByProperty("ddId", ddId);
+                tableEntitie.setList(radioList);
+                uiWidget = RadioUIWidget.createRadioUIWidget(tableEntitie);
+                break;
+            case "checkbox" :
+                List<DDSub> checkboxList = ddSubService.queryByProperty("ddId", ddId);
+                tableEntitie.setList(checkboxList);
+                uiWidget = CheckboxWidget.createCheckboxWidget(tableEntitie);
+                break;
+        }
+        return uiWidget;
     }
 
     /**

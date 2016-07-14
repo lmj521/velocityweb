@@ -14,7 +14,7 @@ public class ServiceImplNewfile extends NewFile {
 	private EntityModel entityModel;
 	private EntityViewUI entityViewUI;
 
-	 private static final String TEMPLATE_PATH = "serviceImplTemplate.vm";
+	 private static final String TEMPLATE_PATH = "template/serviceImplTemplate.vm";
 	
 	public ServiceImplNewfile(String name, String projectPath, String packageName, EntityModel entityModel,
 			EntityViewUI entityViewUI) {

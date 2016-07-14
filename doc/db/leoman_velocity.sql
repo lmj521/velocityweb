@@ -94,16 +94,20 @@ CREATE TABLE `t_user_login` (
   `create_date` bigint,
   `modify_date` bigint,
   `last_login_date` bigint,
-  `ip_address` varchar(20) comment "登录IP地址",
+  `ip_address` varchar(20) comment '登录IP地址',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户登录信息表';
 
-DROP TABLE IF EXISTS `t_user_info`;
+DROP TABLE IF EXISTS `t_log`;
 
 /** 日志表 **/
 CREATE TABLE `t_log` (
   `id` bigint(32) NOT NULL auto_increment,
-  `message` varchar(100) DEFAULT '' comment '日志消息',
+  `message` LONGTEXT comment '日志消息',
+  `user_type` int(2) DEFAULT 0 COMMENT '用户类别 0:后台管理员 1:APP用户',
+  `url` VARCHAR(500) DEFAULT '' COMMENT '访问路径',
+  `params` VARCHAR(500) DEFAULT '' COMMENT '访问参数',
+  `log_type` INT(2) DEFAULT 0 COMMENT '日志类型 0:信息 1:错误',
   `user_id` bigint COMMENT '操作用户ID',
   `create_date` bigint,
   `modify_date` bigint,
@@ -122,24 +126,24 @@ CREATE TABLE `t_module_relation` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模块关联表';
 
-DROP TABLE IF EXISTS `t_param_option`;
+DROP TABLE IF EXISTS `t_dd`;
 /** 多选项设置表 **/
-CREATE TABLE `t_param_option` (
+CREATE TABLE `t_dd` (
   `id` bigint(32) NOT NULL auto_increment,
   `name` VARCHAR(20) NOT NULL COMMENT '选项名字',
   `create_date` bigint,
   `modify_date` bigint,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='多选项设置表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据字典表';
 
-DROP TABLE IF EXISTS `t_param_option_values`;
+DROP TABLE IF EXISTS `t_ddsub`;
 /** 多选项至表 **/
-CREATE TABLE `t_param_option_values` (
+CREATE TABLE `t_ddsub` (
   `id` bigint(32) NOT NULL auto_increment,
-  `p_id` VARCHAR(20) NOT NULL COMMENT '选项ID',
-  `value` VARCHAR(20) NOT NULL COMMENT 'value值',
-  `text` VARCHAR(20) NOT NULL COMMENT 'text值',
+  `dd_id` VARCHAR(20) NOT NULL COMMENT '选项ID',
+  `key1` VARCHAR(20) NOT NULL COMMENT 'value值',
+  `value1` VARCHAR(20) NOT NULL COMMENT 'text值',
   `create_date` bigint,
   `modify_date` bigint,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='多选项至表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='数据字典子表';
