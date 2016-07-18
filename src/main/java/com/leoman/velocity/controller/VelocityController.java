@@ -19,6 +19,7 @@ import com.leoman.velocity.model.*;
 import com.leoman.velocity.model.ui.*;
 import com.leoman.velocity.service.DDService;
 import com.leoman.velocity.service.DDSubService;
+import com.leoman.velocity.util.ModelSortCompare;
 import com.qiniu.util.Json;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
@@ -36,10 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2016/6/22.
@@ -249,6 +247,7 @@ public class VelocityController {
         }
 
         if(type.equals(EntityViewUI.TYPE_ADD)) {
+            Collections.sort(uiWidgets,new ModelSortCompare());
             AddModel model = new AddModel(uiWidgets);
             ui.setAddModel(model);
         }

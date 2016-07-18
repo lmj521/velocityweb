@@ -7,11 +7,35 @@ package com.leoman.velocity.model;
  */
 public enum ColunmType {
 
-	defaultText,    // 默认输入框
-	image,          // 图片
-	richText,       // 富文本
-	select,         // 下拉框
-	radio,          // 单选框
-	checkbox,       // 复选框
-	date            // 日期
+	defaultText("defaultText",0),    // 默认输入框
+	image("image",1),          // 图片
+	richText("richText",2),       // 富文本
+	select("select",2),         // 下拉框
+	radio("radio",2),          // 单选框
+	checkbox("checkbox",2),       // 复选框
+	date("date",2);            // 日期
+
+	private ColunmType(String name,Integer type) {
+		this.name = name;
+		this.type = type;
+	}
+
+	private String name;
+	private Integer type;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
 }
